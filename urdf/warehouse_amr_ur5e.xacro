@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<robot name="warehouse_amr" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Existing AMR: chassis, wheels, casters, LiDAR, IMU, diff-drive ros2_control
+       and the gz_ros2_control plugin, pulled in unchanged. -->
+  <xacro:include filename="$(find warehouse_amr)/urdf/warehouse_amr.xacro"/>
+
+  <xacro:include filename="$(find ur_description)/urdf/ur_macro.xacro"/>
+  <xacro:include filename="$(find ur_simulation_gz)/urdf/ur_gz.ros2_control.xacro"/>
+
+  <!-- UR5e on the front half of the deck. Deck top is z = +0.125 in base_link
+       (chassis_height 0.25 / 2). -->
+  <xacro:ur_robot
+    name="ur"
+    tf_prefix="ur_"
+    parent="base_link"
+    joint_limits_parameters_file="$(find ur_description)/config/ur5e/joint_limits.yaml"
+    kinematics_parameters_file="$(find ur_description)/config/ur5e/default_kinematics.yaml"
+    physical_parameters_file="$(find ur_description)/config/ur5e/physical_parameters.yaml"
+    visual_parameters_file="$(find ur_description)/config/ur5e/visual_parameters.yaml"
+    force_abs_paths="true">
+    <origin xyz="0.10 0 0.125" rpy="0 0 0"/>
+  </xacro:ur_robot>
+
+  <!-- Second ros2_control hardware component, same Gazebo plugin as the wheels. -->
+  <xacro:ur_ros2_control name="ur_system" tf_prefix="ur_"/>
+
+  <xacro:include filename="$(find warehouse_amr)/urdf/gripper_mount.xacro"/>
+
+</robot>

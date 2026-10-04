@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<sdf version="1.9">
+  <model name="pick_shelf">
+    <static>true</static>
+    <link name="shelf_link">
+      <pose>0 0 0.275 0 0 0</pose>
+      <collision name="c">
+        <geometry><box><size>0.40 0.80 0.55</size></box></geometry>
+      </collision>
+      <visual name="v">
+        <geometry><box><size>0.40 0.80 0.55</size></box></geometry>
+        <material>
+          <ambient>0.55 0.40 0.25 1</ambient>
+          <diffuse>0.55 0.40 0.25 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>

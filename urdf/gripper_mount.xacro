@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find robotiq_description)/urdf/ur_to_robotiq_adapter.urdf.xacro"/>
+  <!-- Local copy of the Robotiq macro with the <mimic> tags removed
+       (Gazebo locked the driver joint with them in place). -->
+  <xacro:include filename="$(find warehouse_amr)/urdf/robotiq_nomimic.xacro"/>
+
+  <xacro:ur_to_robotiq prefix="rq_" connected_to="ur_tool0"/>
+
+  <xacro:robotiq_gripper name="rq_gripper" prefix="rq_" parent="rq_gripper_mount_link"
+                         include_ros2_control="false">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </xacro:robotiq_gripper>
+
+  <!-- All six finger joints are commanded directly. The multipliers are applied
+       by the caller (see gripper.py), matching the original URDF mimic table. -->
+  <ros2_control name="rq_gripper_system" type="system">
+    <hardware>
+      <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+    </hardware>
+    <joint name="rq_robotiq_85_left_knuckle_joint">
+      <command_interface name="position"/>
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="rq_robotiq_85_right_knuckle_joint">
+      <command_interface name="position"/>
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="rq_robotiq_85_left_inner_knuckle_joint">
+      <command_interface name="position"/>
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="rq_robotiq_85_right_inner_knuckle_joint">
+      <command_interface name="position"/>
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="rq_robotiq_85_left_finger_tip_joint">
+      <command_interface name="position"/>
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="rq_robotiq_85_right_finger_tip_joint">
+      <command_interface name="position"/>
+      <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+  </ros2_control>
+
+</robot>

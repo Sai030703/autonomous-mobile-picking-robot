@@ -1,0 +1,72 @@
+/**/controller_manager:
+  ros__parameters:
+    update_rate: 50
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    diff_drive_controller:
+      type: diff_drive_controller/DiffDriveController
+
+    arm_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    gripper_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+/**/diff_drive_controller:
+  ros__parameters:
+    left_wheel_names: ["left_wheel_joint"]
+    right_wheel_names: ["right_wheel_joint"]
+    wheel_separation: 0.50
+    wheel_radius: 0.08
+    publish_rate: 50.0
+    odom_frame_id: odom
+    base_frame_id: base_footprint
+    use_stamped_vel: false
+    cmd_vel_timeout: 0.5
+
+/**/arm_controller:
+  ros__parameters:
+    joints:
+      - ur_shoulder_pan_joint
+      - ur_shoulder_lift_joint
+      - ur_elbow_joint
+      - ur_wrist_1_joint
+      - ur_wrist_2_joint
+      - ur_wrist_3_joint
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    state_publish_rate: 50.0
+    action_monitor_rate: 20.0
+    allow_partial_joints_goal: false
+    constraints:
+      stopped_velocity_tolerance: 0.2
+      goal_time: 0.0
+      ur_shoulder_pan_joint: { trajectory: 0.2, goal: 0.1 }
+      ur_shoulder_lift_joint: { trajectory: 0.2, goal: 0.1 }
+      ur_elbow_joint: { trajectory: 0.2, goal: 0.1 }
+      ur_wrist_1_joint: { trajectory: 0.2, goal: 0.1 }
+      ur_wrist_2_joint: { trajectory: 0.2, goal: 0.1 }
+      ur_wrist_3_joint: { trajectory: 0.2, goal: 0.1 }
+
+/**/gripper_controller:
+  ros__parameters:
+    joints:
+      - rq_robotiq_85_left_knuckle_joint
+      - rq_robotiq_85_right_knuckle_joint
+      - rq_robotiq_85_left_inner_knuckle_joint
+      - rq_robotiq_85_right_inner_knuckle_joint
+      - rq_robotiq_85_left_finger_tip_joint
+      - rq_robotiq_85_right_finger_tip_joint
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    state_publish_rate: 50.0
+    action_monitor_rate: 20.0
+    allow_partial_joints_goal: false
