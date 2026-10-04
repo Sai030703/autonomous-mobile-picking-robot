@@ -1,0 +1,10 @@
+dock_stats2.py, 8 runs alternating site A (-0.8,-3.0) and site B (-3.8,0.25). "Cube" assumed 0.72 m ahead of the dock pose.
+Summary lines did not print (fewer than 2 nav successes per site).
+run 1 site A: nav ok | real dock error 68 mm | AMCL cube error: along -24.1 mm, across +64.0 mm | yaw -1.5 deg | AMCL xy minus real: dx +31 dy -41 mm
+run 2 site B: nav ok | real dock error 55 mm | AMCL cube error: along +21.5 mm, across +19.7 mm | yaw -2.8 deg | AMCL xy minus real: dx -21 dy +12 mm
+run 3 site A: nav FAIL | real dock error 185 mm | AMCL cube error: along -75.6 mm, across -27.8 mm | yaw +2.1 deg | AMCL xy minus real: dx +70 dy -1 mm
+run 4 site B: nav FAIL | real dock error 57 mm | AMCL cube error: along +19.0 mm, across +70.5 mm | yaw -1.8 deg | AMCL xy minus real: dx -20 dy -49 mm
+run 5 site A: nav FAIL | real dock error 165 mm | AMCL cube error: along +74.4 mm, across -21.9 mm | yaw +0.9 deg | AMCL xy minus real: dx -77 dy +11 mm
+run 6 site B: nav FAIL | real dock error 68 mm | AMCL cube error: along -14.4 mm, across +65.9 mm | yaw -2.2 deg | AMCL xy minus real: dx +12 dy -37 mm
+run 7 site A: nav FAIL | real dock error 151 mm | AMCL cube error: along +24.3 mm, across +13.7 mm | yaw +1.5 deg | AMCL xy minus real: dx -28 dy -31 mm
+run 8 site B: nav FAIL | real dock error 68 mm | AMCL cube error: along -18.5 mm, across +41.1 mm | yaw -1.8 deg | AMCL xy minus real: dx +17 dy -18 mm
