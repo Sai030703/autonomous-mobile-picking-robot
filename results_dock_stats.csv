@@ -1,0 +1,9 @@
+run,stage_ok,dock_ok,dock_err_mm,cube_fwd_err_mm,cube_side_err_mm,yaw_err_deg
+1,False,False,3104.8,-0.0,-0.0,0.0
+2,False,True,84.5,-31.8,53.8,-3.23
+3,False,True,25.2,10.1,73.2,-3.92
+4,True,True,62.7,-13.4,57.3,-2.99
+5,True,True,73.7,-5.0,82.0,-3.61
+6,False,True,36.5,32.5,30.4,-1.6
+7,True,True,74.1,28.4,46.5,-2.31
+8,True,True,73.4,-9.8,84.9,-3.12
