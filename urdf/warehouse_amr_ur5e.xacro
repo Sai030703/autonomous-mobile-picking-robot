@@ -27,4 +27,6 @@
 
   <xacro:include filename="$(find warehouse_amr)/urdf/gripper_mount.xacro"/>
 
+  <xacro:include filename="$(find warehouse_amr)/urdf/wrist_camera.xacro"/>
+
 </robot>

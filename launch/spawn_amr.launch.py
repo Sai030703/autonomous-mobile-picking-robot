@@ -88,4 +88,15 @@ def generate_launch_description():
                        PathSubstitution(FindPackageShare('warehouse_amr')) / 'config' / 'amr_controllers.yaml'],
             output='screen',
         ),
+        Node(
+            package='ros_gz_bridge',
+            executable='parameter_bridge',
+            name='camera_bridge',
+            arguments=[
+                '/wrist_camera/image@sensor_msgs/msg/Image[gz.msgs.Image',
+                '/wrist_camera/depth_image@sensor_msgs/msg/Image[gz.msgs.Image',
+                '/wrist_camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo',
+            ],
+            output='screen',
+        ),
     ])

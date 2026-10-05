@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Camera body on the tool flange. Looks along tool +z (down when the gripper points down).
+       Offset 8 cm along tool y: the fingers close along tool x, so this keeps them out of view. -->
+  <joint name="wrist_camera_joint" type="fixed">
+    <parent link="ur_tool0"/>
+    <child link="wrist_camera_link"/>
+    <origin xyz="0 0.08 0.02" rpy="0 -1.5708 0"/>
+  </joint>
+  <link name="wrist_camera_link">
+    <visual>
+      <geometry><box size="0.02 0.06 0.03"/></geometry>
+      <material name="cam_dark"><color rgba="0.1 0.1 0.1 1"/></material>
+    </visual>
+    <inertial>
+      <mass value="0.05"/>
+      <inertia ixx="1e-5" ixy="0" ixz="0" iyy="1e-5" iyz="0" izz="1e-5"/>
+    </inertial>
+  </link>
+
+  <!-- Standard optical frame (x right, y down, z forward) for back-projecting pixels -->
+  <joint name="wrist_camera_optical_joint" type="fixed">
+    <parent link="wrist_camera_link"/>
+    <child link="wrist_camera_optical_link"/>
+    <origin xyz="0 0 0" rpy="-1.5708 0 -1.5708"/>
+  </joint>
+  <link name="wrist_camera_optical_link"/>
+
+  <gazebo reference="wrist_camera_link">
+    <sensor name="wrist_camera" type="rgbd_camera">
+      <topic>wrist_camera</topic>
+      <update_rate>10</update_rate>
+      <always_on>true</always_on>
+      <camera>
+        <horizontal_fov>1.4</horizontal_fov>
+        <image><width>640</width><height>480</height></image>
+        <clip><near>0.05</near><far>3.0</far></clip>
+        <depth_camera><clip><near>0.05</near><far>3.0</far></clip></depth_camera>
+      </camera>
+    </sensor>
+  </gazebo>
+
+</robot>

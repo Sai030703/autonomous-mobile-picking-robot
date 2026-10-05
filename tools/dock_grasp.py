@@ -216,7 +216,7 @@ def grip(q):
 def main():
     mode = sys.argv[1] if len(sys.argv) > 1 else ''
     zoff = float(sys.argv[2]) if len(sys.argv) > 2 else 0.0
-    if mode not in ('plan', 'descend', 'grab'):
+    if mode not in ('plan', 'descend', 'look', 'grab'):
         print(__doc__)
         return
     rclpy.init()
@@ -263,6 +263,9 @@ def main():
     grip(0.0)
     if not n.move(joints):
         return
+    if mode == 'look':
+        print('Look pose reached: gripper open, tool pointing down, 10 cm above the grasp height.')
+        return
     cur = n.tf(FRAME, TIP)
     pose2 = Pose()
     pose2.position.x = cur.translation.x
@@ -273,4 +276,5 @@ def main():
     print('Stopped above the cube with the gripper open. Look before running grab.')
 
 
-main()
+if __name__ == '__main__':
+    main()
