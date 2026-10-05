@@ -13,6 +13,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import dock_grasp as dg      # noqa: E402
 import vision_grasp as vg    # noqa: E402
+import yaw3d_test as y3      # noqa: E402
 
 FINGER_DROP = 0.160       # tool0 z minus lowest finger point (measured from the STL meshes)
 CLEAR = 0.005
@@ -62,7 +63,7 @@ def main():
     time.sleep(1.0)
 
     # 2. detect; score against Gazebo truth (evaluation only)
-    cx, cy, cz, yaw = vg.detect(n, n.buf)
+    cx, cy, cz, yaw, _w, _l = y3.detect3d(n)
     print('DETECTED cube: x=%.3f y=%.3f centre z=%.3f yaw %.1f deg' % (cx, cy, cz, math.degrees(yaw)))
     rx, ry, rz, ryaw = gz('warehouse_amr')
     wx, wy, wz, wyaw = gz('pick_item')
@@ -81,10 +82,6 @@ def main():
     if j is None or not n.move(j):
         print('pre-grasp failed'); return
     time.sleep(1.0)
-    c2 = vg.detect(n, n.buf)
-    print('re-detect at pre-grasp: dx %+.1f mm dy %+.1f mm dz %+.1f mm dyaw %+.1f deg' %
-          (1000 * (c2[0] - cx), 1000 * (c2[1] - cy), 1000 * (c2[2] - cz), math.degrees(wrap90(c2[3] - yaw))))
-
     # 5. straight-line descent over the current tool position
     cur = n.tf(dg.FRAME, dg.TIP)
     p2 = Pose()
