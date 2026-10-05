@@ -29,4 +29,6 @@
 
   <xacro:include filename="$(find warehouse_amr)/urdf/wrist_camera.xacro"/>
 
+  <xacro:include filename="$(find warehouse_amr)/urdf/tote.xacro"/>
+
 </robot>

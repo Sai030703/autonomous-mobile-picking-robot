@@ -26,12 +26,22 @@
   <disable_collisions link1="base_footprint" link2="lidar_link" reason="User"/>
   <disable_collisions link1="base_footprint" link2="rear_caster_link" reason="User"/>
   <disable_collisions link1="base_footprint" link2="right_wheel_link" reason="User"/>
+  <disable_collisions link1="base_footprint" link2="tote_back" reason="User"/>
+  <disable_collisions link1="base_footprint" link2="tote_floor" reason="User"/>
+  <disable_collisions link1="base_footprint" link2="tote_front" reason="User"/>
+  <disable_collisions link1="base_footprint" link2="tote_left" reason="User"/>
+  <disable_collisions link1="base_footprint" link2="tote_right" reason="User"/>
   <disable_collisions link1="base_link" link2="front_caster_link" reason="User"/>
   <disable_collisions link1="base_link" link2="imu_link" reason="User"/>
   <disable_collisions link1="base_link" link2="left_wheel_link" reason="User"/>
   <disable_collisions link1="base_link" link2="lidar_link" reason="User"/>
   <disable_collisions link1="base_link" link2="rear_caster_link" reason="User"/>
   <disable_collisions link1="base_link" link2="right_wheel_link" reason="User"/>
+  <disable_collisions link1="base_link" link2="tote_back" reason="User"/>
+  <disable_collisions link1="base_link" link2="tote_floor" reason="User"/>
+  <disable_collisions link1="base_link" link2="tote_front" reason="User"/>
+  <disable_collisions link1="base_link" link2="tote_left" reason="User"/>
+  <disable_collisions link1="base_link" link2="tote_right" reason="User"/>
   <disable_collisions link1="base_link" link2="ur_base_link" reason="Adjacent"/>
   <disable_collisions link1="base_link" link2="ur_base_link_inertia" reason="Adjacent"/>
   <disable_collisions link1="base_link" link2="ur_shoulder_link" reason="Adjacent"/>
@@ -40,16 +50,46 @@
   <disable_collisions link1="front_caster_link" link2="lidar_link" reason="User"/>
   <disable_collisions link1="front_caster_link" link2="rear_caster_link" reason="User"/>
   <disable_collisions link1="front_caster_link" link2="right_wheel_link" reason="User"/>
+  <disable_collisions link1="front_caster_link" link2="tote_back" reason="User"/>
+  <disable_collisions link1="front_caster_link" link2="tote_floor" reason="User"/>
+  <disable_collisions link1="front_caster_link" link2="tote_front" reason="User"/>
+  <disable_collisions link1="front_caster_link" link2="tote_left" reason="User"/>
+  <disable_collisions link1="front_caster_link" link2="tote_right" reason="User"/>
   <disable_collisions link1="imu_link" link2="left_wheel_link" reason="User"/>
   <disable_collisions link1="imu_link" link2="lidar_link" reason="User"/>
   <disable_collisions link1="imu_link" link2="rear_caster_link" reason="User"/>
   <disable_collisions link1="imu_link" link2="right_wheel_link" reason="User"/>
+  <disable_collisions link1="imu_link" link2="tote_back" reason="User"/>
+  <disable_collisions link1="imu_link" link2="tote_floor" reason="User"/>
+  <disable_collisions link1="imu_link" link2="tote_front" reason="User"/>
+  <disable_collisions link1="imu_link" link2="tote_left" reason="User"/>
+  <disable_collisions link1="imu_link" link2="tote_right" reason="User"/>
   <disable_collisions link1="left_wheel_link" link2="lidar_link" reason="User"/>
   <disable_collisions link1="left_wheel_link" link2="rear_caster_link" reason="User"/>
   <disable_collisions link1="left_wheel_link" link2="right_wheel_link" reason="User"/>
+  <disable_collisions link1="left_wheel_link" link2="tote_back" reason="User"/>
+  <disable_collisions link1="left_wheel_link" link2="tote_floor" reason="User"/>
+  <disable_collisions link1="left_wheel_link" link2="tote_front" reason="User"/>
+  <disable_collisions link1="left_wheel_link" link2="tote_left" reason="User"/>
+  <disable_collisions link1="left_wheel_link" link2="tote_right" reason="User"/>
   <disable_collisions link1="lidar_link" link2="rear_caster_link" reason="User"/>
   <disable_collisions link1="lidar_link" link2="right_wheel_link" reason="User"/>
+  <disable_collisions link1="lidar_link" link2="tote_back" reason="User"/>
+  <disable_collisions link1="lidar_link" link2="tote_floor" reason="User"/>
+  <disable_collisions link1="lidar_link" link2="tote_front" reason="User"/>
+  <disable_collisions link1="lidar_link" link2="tote_left" reason="User"/>
+  <disable_collisions link1="lidar_link" link2="tote_right" reason="User"/>
   <disable_collisions link1="rear_caster_link" link2="right_wheel_link" reason="User"/>
+  <disable_collisions link1="rear_caster_link" link2="tote_back" reason="User"/>
+  <disable_collisions link1="rear_caster_link" link2="tote_floor" reason="User"/>
+  <disable_collisions link1="rear_caster_link" link2="tote_front" reason="User"/>
+  <disable_collisions link1="rear_caster_link" link2="tote_left" reason="User"/>
+  <disable_collisions link1="rear_caster_link" link2="tote_right" reason="User"/>
+  <disable_collisions link1="right_wheel_link" link2="tote_back" reason="User"/>
+  <disable_collisions link1="right_wheel_link" link2="tote_floor" reason="User"/>
+  <disable_collisions link1="right_wheel_link" link2="tote_front" reason="User"/>
+  <disable_collisions link1="right_wheel_link" link2="tote_left" reason="User"/>
+  <disable_collisions link1="right_wheel_link" link2="tote_right" reason="User"/>
   <disable_collisions link1="rq_gripper_mount_link" link2="rq_robotiq_85_base_link" reason="User"/>
   <disable_collisions link1="rq_gripper_mount_link" link2="rq_robotiq_85_left_finger_link" reason="User"/>
   <disable_collisions link1="rq_gripper_mount_link" link2="rq_robotiq_85_left_finger_tip_link" reason="User"/>
@@ -127,6 +167,31 @@
   <disable_collisions link1="rq_robotiq_85_right_knuckle_link" link2="ur_wrist_3_link" reason="User"/>
   <disable_collisions link1="rq_ur_to_robotiq_link" link2="ur_tool0" reason="User"/>
   <disable_collisions link1="rq_ur_to_robotiq_link" link2="ur_wrist_3_link" reason="User"/>
+  <disable_collisions link1="tote_back" link2="tote_floor" reason="User"/>
+  <disable_collisions link1="tote_back" link2="tote_front" reason="User"/>
+  <disable_collisions link1="tote_back" link2="tote_left" reason="User"/>
+  <disable_collisions link1="tote_back" link2="tote_right" reason="User"/>
+  <disable_collisions link1="tote_back" link2="ur_base_link" reason="User"/>
+  <disable_collisions link1="tote_back" link2="ur_base_link_inertia" reason="User"/>
+  <disable_collisions link1="tote_back" link2="ur_shoulder_link" reason="User"/>
+  <disable_collisions link1="tote_floor" link2="tote_front" reason="User"/>
+  <disable_collisions link1="tote_floor" link2="tote_left" reason="User"/>
+  <disable_collisions link1="tote_floor" link2="tote_right" reason="User"/>
+  <disable_collisions link1="tote_floor" link2="ur_base_link" reason="User"/>
+  <disable_collisions link1="tote_floor" link2="ur_base_link_inertia" reason="User"/>
+  <disable_collisions link1="tote_floor" link2="ur_shoulder_link" reason="User"/>
+  <disable_collisions link1="tote_front" link2="tote_left" reason="User"/>
+  <disable_collisions link1="tote_front" link2="tote_right" reason="User"/>
+  <disable_collisions link1="tote_front" link2="ur_base_link" reason="User"/>
+  <disable_collisions link1="tote_front" link2="ur_base_link_inertia" reason="User"/>
+  <disable_collisions link1="tote_front" link2="ur_shoulder_link" reason="User"/>
+  <disable_collisions link1="tote_left" link2="tote_right" reason="User"/>
+  <disable_collisions link1="tote_left" link2="ur_base_link" reason="User"/>
+  <disable_collisions link1="tote_left" link2="ur_base_link_inertia" reason="User"/>
+  <disable_collisions link1="tote_left" link2="ur_shoulder_link" reason="User"/>
+  <disable_collisions link1="tote_right" link2="ur_base_link" reason="User"/>
+  <disable_collisions link1="tote_right" link2="ur_base_link_inertia" reason="User"/>
+  <disable_collisions link1="tote_right" link2="ur_shoulder_link" reason="User"/>
   <disable_collisions link1="ur_base_link" link2="ur_base_link_inertia" reason="Adjacent"/>
   <disable_collisions link1="ur_base_link_inertia" link2="ur_shoulder_link" reason="Adjacent"/>
   <disable_collisions link1="ur_forearm_link" link2="ur_upper_arm_link" reason="Adjacent"/>

@@ -20,12 +20,16 @@ for a, b in [
 
 # Mobile base: wheels and casters overlap the chassis box by design
 base = ["base_footprint", "base_link", "left_wheel_link", "right_wheel_link",
-        "front_caster_link", "rear_caster_link", "lidar_link", "imu_link"]
+        "front_caster_link", "rear_caster_link", "lidar_link", "imu_link",
+        "tote_floor", "tote_front", "tote_back", "tote_left", "tote_right"]
 for a, b in itertools.combinations(base, 2):
     add(a, b, "User")
 # Arm base sits on the deck
 for l in ["ur_base_link", "ur_base_link_inertia", "ur_shoulder_link"]:
     add("base_link", l, "Adjacent")
+for t in ["tote_floor", "tote_front", "tote_back", "tote_left", "tote_right"]:
+    for l in ["ur_base_link", "ur_base_link_inertia", "ur_shoulder_link"]:
+        add(t, l, "User")
 
 # Gripper: the finger linkage overlaps itself by design
 gripper = [

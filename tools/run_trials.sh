@@ -12,6 +12,6 @@ for i in $(seq 1 $N); do
   YAW=$(python3 -c "import random, math; print(round(math.radians(random.uniform(-10, 10)), 3))")
   ros2 run ros_gz_sim create -file ~/ros2_ws/src/warehouse_amr/worlds/pick_item.sdf -name pick_item -x $X -y $Y -z 0.582 -Y $YAW > /dev/null 2>&1
   sleep 2
-  python3 ~/ros2_ws/src/warehouse_amr/tools/vision_pick.py 2>&1 | grep -E "DETECTED|re-detect|AT GRASP|RESULT|failed|Path blocked"
+  python3 ~/ros2_ws/src/warehouse_amr/tools/vision_pick.py 2>&1 | grep -E "DETECTED|AT GRASP|RESULT|DIAG|failed|blocked|Traceback|Error|error"
 done
 echo "=== done; results in ~/vision_trials.csv ==="

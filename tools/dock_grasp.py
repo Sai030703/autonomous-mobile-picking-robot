@@ -105,13 +105,13 @@ class DockGrasp(Node):
         origin = sum(zs) / 2.0
         return origin + PAD, origin
 
-    def add_shelf(self, x, y, z, yaw):
+    def add_shelf(self, x, y, z, yaw, height=None):
         co = CollisionObject()
         co.header.frame_id = FRAME
         co.id = 'pick_shelf'
         prim = SolidPrimitive()
         prim.type = SolidPrimitive.BOX
-        prim.dimensions = list(SHELF_SIZE)
+        prim.dimensions = [SHELF_SIZE[0], SHELF_SIZE[1], height if height is not None else SHELF_SIZE[2]]
         pose = Pose()
         pose.position.x, pose.position.y, pose.position.z = x, y, z
         pose.orientation.z = math.sin(yaw / 2.0)
@@ -140,7 +140,7 @@ class DockGrasp(Node):
         js = res.solution.joint_state
         return {n: p for n, p in zip(js.name, js.position) if n in ARM}
 
-    def move(self, joints):
+    def move(self, joints, plan_only=False):
         if not self.move_cli.wait_for_server(timeout_sec=15.0):
             raise RuntimeError('move_group action server not available')
         goal = MoveGroup.Goal()
@@ -160,7 +160,7 @@ class DockGrasp(Node):
             jc.weight = 1.0
             c.joint_constraints.append(jc)
         rq.goal_constraints.append(c)
-        goal.planning_options.plan_only = False
+        goal.planning_options.plan_only = plan_only
         goal.planning_options.planning_scene_diff.is_diff = True
         goal.planning_options.planning_scene_diff.robot_state.is_diff = True
         fut = self.move_cli.send_goal_async(goal)

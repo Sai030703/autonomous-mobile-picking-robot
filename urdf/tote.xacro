@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!-- Open tote on the rear deck. Interior 0.24 x 0.20 m, walls 0.10 m high.
+       Deck top is z=+0.125 in base_link (chassis_height 0.25 / 2). -->
+  <xacro:property name="tote_x" value="0.25"/>
+  <xacro:property name="tote_y" value="0.20"/>
+  <xacro:property name="tote_len" value="0.26"/>
+  <xacro:property name="tote_wid" value="0.18"/>
+  <xacro:property name="tote_wall" value="0.02"/>
+  <xacro:property name="tote_h" value="0.10"/>
+  <xacro:property name="deck_z" value="0.125"/>
+
+  <xacro:macro name="tote_part" params="name sx sy sz px py pz">
+    <link name="tote_${name}">
+      <visual>
+        <geometry><box size="${sx} ${sy} ${sz}"/></geometry>
+        <material name="tote_blue"><color rgba="0.2 0.4 0.8 1"/></material>
+      </visual>
+      <collision><geometry><box size="${sx} ${sy} ${sz}"/></geometry></collision>
+      <inertial>
+        <mass value="0.2"/>
+        <inertia ixx="1e-3" ixy="0" ixz="0" iyy="1e-3" iyz="0" izz="1e-3"/>
+      </inertial>
+    </link>
+    <joint name="tote_${name}_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="tote_${name}"/>
+      <origin xyz="${px} ${py} ${pz}" rpy="0 0 0"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:tote_part name="floor" sx="${tote_len}" sy="${tote_wid}" sz="${tote_wall}"
+                   px="${tote_x}" py="${tote_y}" pz="${deck_z + tote_wall/2}"/>
+  <xacro:tote_part name="front" sx="${tote_wall}" sy="${tote_wid}" sz="${tote_h}"
+                   px="${tote_x + tote_len/2 - tote_wall/2}" py="${tote_y}" pz="${deck_z + tote_h/2}"/>
+  <xacro:tote_part name="back" sx="${tote_wall}" sy="${tote_wid}" sz="${tote_h}"
+                   px="${tote_x - tote_len/2 + tote_wall/2}" py="${tote_y}" pz="${deck_z + tote_h/2}"/>
+  <xacro:tote_part name="left" sx="${tote_len}" sy="${tote_wall}" sz="${tote_h}"
+                   px="${tote_x}" py="${tote_y + tote_wid/2 - tote_wall/2}" pz="${deck_z + tote_h/2}"/>
+  <xacro:tote_part name="right" sx="${tote_len}" sy="${tote_wall}" sz="${tote_h}"
+                   px="${tote_x}" py="${tote_y - tote_wid/2 + tote_wall/2}" pz="${deck_z + tote_h/2}"/>
+</robot>
