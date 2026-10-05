@@ -100,4 +100,5 @@ def main():
     print('Stopped above the cube, gripper open. Run: dock_grasp.py grab')
 
 
-main()
+if __name__ == '__main__':
+    main()
