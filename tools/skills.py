@@ -56,7 +56,8 @@ def pick(n):
     try:
         cx, cy, cz, yaw, _w, _l = y3.detect3d(n)
     except Exception as e:           # no red pixels, etc.
-        return False, 'cube not found: %s' % e, {}
+        msg = 'no red object in view (item not on the shelf, or out of camera range)' if isinstance(e, (IndexError, ValueError)) else 'detection error: %s' % e
+        return False, msg, {}
     n.add_shelf(cx + vp.SHELF_OFFSET * math.cos(yaw), cy + vp.SHELF_OFFSET * math.sin(yaw),
                 (cz - vp.CUBE_HALF) - vp.SHELF_HALF_H - vp.SHELF_TOP_MARGIN / 2, yaw,
                 height=0.55 - vp.SHELF_TOP_MARGIN)
