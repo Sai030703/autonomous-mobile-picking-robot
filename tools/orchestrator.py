@@ -97,6 +97,12 @@ class Orchestrator(dg.DockGrasp):
         ok = dpos <= pos_tol and dyaw <= yaw_tol_deg
         return ok, 'off by %.2f m and %.1f deg' % (dpos, dyaw)
 
+    def redock_then_pick(self):
+        x, y, _ = self.robot_pose()
+        if math.hypot(x + 0.8, y + 3.0) > 0.12:
+            self.goto(SHELF_DOCK)
+        return skills.pick(self)[:2]
+
     def retry(self, name, fn, tries):
         for i in range(1, tries + 1):
             ok, why = fn()
@@ -116,7 +122,7 @@ class Orchestrator(dg.DockGrasp):
             return self.set_state('FAILED')
         for k in range(qty):
             self.set_state('PICKING')
-            if not self.retry('pick %d/%d' % (k + 1, qty), lambda: skills.pick(self)[:2], MAX_PICK):
+            if not self.retry('pick %d/%d' % (k + 1, qty), lambda: self.redock_then_pick(), MAX_PICK):
                 return self.set_state('FAILED')
             self.set_state('PLACING')
             if not self.retry('place %d/%d' % (k + 1, qty), lambda: skills.place(self)[:2], MAX_PLACE):

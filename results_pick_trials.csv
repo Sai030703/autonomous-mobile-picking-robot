@@ -1,0 +1,6 @@
+trial,dock_ok,real_x,real_y,real_yaw_deg,det_y,det_x,reached_z,ok,reason
+1,False,-1.041,-2.877,-0.1,nan,nan,nan,False,look pose failed
+2,True,-0.853,-3.0,8.0,-0.107,0.766,0.69,True,ok
+3,True,-0.812,-2.985,8.2,-0.116,0.732,0.688,True,ok
+4,False,-1.062,-2.836,1.0,nan,nan,nan,False,look pose failed
+5,True,-0.831,-2.994,5.5,-0.074,0.753,0.687,True,ok

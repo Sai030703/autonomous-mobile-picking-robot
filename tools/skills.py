@@ -13,6 +13,7 @@ import dock_grasp as dg      # noqa: E402
 import vision_pick as vp     # noqa: E402
 import yaw3d_test as y3      # noqa: E402
 
+LAST = {}
 HELD_SHORTFALL = 0.018   # rad; chosen from one held and one empty reading, to be re-checked on logged data
 CLEAR_Z = 0.85
 TOTE_X, TOTE_Y = 0.25, 0.20
@@ -44,6 +45,9 @@ def pick(n):
     """Detect, grasp, lift. Returns (ok, reason, info)."""
     tcp, _ = n.tcp()
     rob = n.robot_pose()
+    d = math.hypot(rob[0] + 0.8, rob[1] + 3.0)
+    if d > 0.12:
+        return False, 'dock too far from the shelf pose: %.0f cm' % (100 * d), {}
     x0, y0 = dg.to_robot(dg.CUBE_W, rob)
     dg.grip(0.0)
     if not go_ready(n):
@@ -58,6 +62,7 @@ def pick(n):
     except Exception as e:           # no red pixels, etc.
         msg = 'no red object in view (item not on the shelf, or out of camera range)' if isinstance(e, (IndexError, ValueError)) else 'detection error: %s' % e
         return False, msg, {}
+    LAST.update(cx=cx, cy=cy, cz=cz, yaw=yaw)
     n.add_shelf(cx + vp.SHELF_OFFSET * math.cos(yaw), cy + vp.SHELF_OFFSET * math.sin(yaw),
                 (cz - vp.CUBE_HALF) - vp.SHELF_HALF_H - vp.SHELF_TOP_MARGIN / 2, yaw,
                 height=0.55 - vp.SHELF_TOP_MARGIN)
@@ -92,6 +97,8 @@ def pick(n):
     if not n.line_to(p2):
         return False, 'descent blocked', {}
     reached = n.tf(dg.FRAME, dg.TIP).translation.z
+    LAST['reached'] = reached
+    LAST['grasp_z'] = grasp_z
     if reached > grasp_z + 0.015:
         _sh, _l1, _r1 = knuckle_shortfall(n)
         print('FINGERS after the stop: left %.3f right %.3f' % (_l1, _r1))
