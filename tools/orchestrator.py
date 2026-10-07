@@ -34,7 +34,8 @@ class Orchestrator(dg.DockGrasp):
 
     def publish(self):
         try:
-            pose = self.robot_pose()
+            t = self.buf.lookup_transform('map', dg.FRAME, rclpy.time.Time()).transform
+            pose = (t.translation.x, t.translation.y, dg.yaw_of(t.rotation))
             pos = {'x': round(pose[0], 3), 'y': round(pose[1], 3), 'theta': round(pose[2], 3)}
         except Exception:
             pos = None
@@ -75,7 +76,26 @@ class Orchestrator(dg.DockGrasp):
         if r.result() is None:
             return False, 'navigation timed out'
         ok = r.result().status == GoalStatus.STATUS_SUCCEEDED
-        return ok, '' if ok else 'navigation status %d' % r.result().status
+        res = r.result().result
+        detail = 'code %d %s' % (res.error_code, res.error_msg)
+        return ok, '' if ok else 'navigation status %d (%s)' % (r.result().status, detail)
+
+    def goto_checked(self, pose):
+        ok, why = self.goto(pose)
+        if not ok:
+            return ok, why
+        ok2, why2 = self.arrived(pose)
+        return ok2, ('arrived, ' if ok2 else 'navigation said success but ') + why2
+
+    def arrived(self, pose, pos_tol=0.25, yaw_tol_deg=20.0):
+        try:
+            x, y, yaw = self.robot_pose()
+        except Exception as e:
+            return False, 'pose unavailable: %s' % e
+        dpos = math.hypot(x - pose[0], y - pose[1])
+        dyaw = abs(math.degrees((yaw - pose[2] + math.pi) % (2 * math.pi) - math.pi))
+        ok = dpos <= pos_tol and dyaw <= yaw_tol_deg
+        return ok, 'off by %.2f m and %.1f deg' % (dpos, dyaw)
 
     def retry(self, name, fn, tries):
         for i in range(1, tries + 1):
@@ -103,7 +123,7 @@ class Orchestrator(dg.DockGrasp):
                 return self.set_state('FAILED')
         skills.go_ready(self)
         self.set_state('NAVIGATING_TO_STATION')
-        if not self.retry('deliver to station', lambda: self.goto(STATION), MAX_DOCK):
+        if not self.retry('deliver to station', lambda: self.goto_checked(STATION), MAX_DOCK):
             return self.set_state('FAILED')
         self.set_state('DONE')
 

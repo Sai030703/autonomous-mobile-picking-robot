@@ -75,7 +75,7 @@ def pick(n):
     dg.grip(0.2)
     dg.grip(0.3)
     short, l, r = knuckle_shortfall(n)
-    held = short > HELD_SHORTFALL
+    held = short > HELD_SHORTFALL and abs(l - r) < 0.05
     info = {'detected': (cx, cy, cz, math.degrees(yaw)), 'grasp_z': reached,
             'knuckle_shortfall': short, 'knuckles': (l, r)}
     print('PICK: reached z=%.3f (target %.3f), knuckle shortfall %.3f rad (L %.3f R %.3f) -> %s' %
