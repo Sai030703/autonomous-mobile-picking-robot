@@ -41,7 +41,7 @@ Controlled batch of 4 consecutive orders (`tools/run_batch.sh`, scene reset befo
 
 Both failed orders failed in the delivery drive. Completed orders took roughly 2.7 to 4.6 minutes in simulation.
 
-## Known limitations (honest list)
+## Known limitations
 
 - **Delivery navigation is unreliable.** In failed runs the planner starts from a pose inside a wall region, so AMCL's estimate drifts away from the true robot position during the drive to the station. The first navigation goal also often fails (empty plan, "failed to make progress") and a retry succeeds. I suspect the station table, which is in Gazebo but not in the saved map, but I did not confirm this. Adding the table to the map and relaxing the collision monitor and progress checker did **not** fix it, so those changes were reverted.
 - **Simulation-only shortcuts.** Before each navigation goal the orchestrator re-seeds AMCL from Gazebo ground truth (`tools/reseed_amcl.py`), and the unload check reads the cube pose from Gazebo. A real robot has neither.
@@ -69,6 +69,3 @@ ros2 topic pub --once /warehouse/order std_msgs/msg/String \
 
 `tools/run_batch.sh N` repeats reset + order N times and writes `batch_results.txt`. `tools/snap_camera.py` saves wrist-camera frames.
 
-## What I would do next
-
-Fix localization near the station (put every fixture into the map or move to scan-independent docking), loosen the arm controller tolerances and re-test the pick, add a camera-based check in the tote, support several items and quantities, and replace the ground-truth shortcuts.
