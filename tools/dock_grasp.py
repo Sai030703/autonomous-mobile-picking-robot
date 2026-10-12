@@ -124,6 +124,27 @@ class DockGrasp(Node):
         req.scene.is_diff = True
         print('shelf in planning scene:', self.call(self.scene_cli, req, '/apply_planning_scene').success)
 
+    def set_box(self, obj_id, x, y, z, size, remove=False):
+        co = CollisionObject()
+        co.header.frame_id = FRAME
+        co.id = obj_id
+        if remove:
+            co.operation = CollisionObject.REMOVE
+        else:
+            prim = SolidPrimitive()
+            prim.type = SolidPrimitive.BOX
+            prim.dimensions = list(size)
+            pose = Pose()
+            pose.position.x, pose.position.y, pose.position.z = x, y, z
+            pose.orientation.w = 1.0
+            co.primitives.append(prim)
+            co.primitive_poses.append(pose)
+            co.operation = CollisionObject.ADD
+        req = ApplyPlanningScene.Request()
+        req.scene.world.collision_objects.append(co)
+        req.scene.is_diff = True
+        return self.call(self.scene_cli, req, '/apply_planning_scene').success
+
     def ik(self, pose):
         req = GetPositionIK.Request()
         r = req.ik_request
@@ -175,7 +196,7 @@ class DockGrasp(Node):
         print('pre-grasp move error code:', code, '(1 = success)')
         return code == MoveItErrorCodes.SUCCESS
 
-    def line_to(self, pose, scale=0.1):
+    def line_to(self, pose, scale=0.1, _retry=True):
         req = GetCartesianPath.Request()
         req.header.frame_id = FRAME
         req.group_name = GROUP
@@ -205,7 +226,13 @@ class DockGrasp(Node):
         rclpy.spin_until_future_complete(self, rf, timeout_sec=90.0)
         code = rf.result().result.error_code.val
         print('execution error code:', code, '(1 = success)')
-        return code == MoveItErrorCodes.SUCCESS
+        if code == MoveItErrorCodes.SUCCESS:
+            return True
+        if _retry:
+            print('execution failed (code %s), recomputing and retrying once' % code)
+            time.sleep(1.0)
+            return self.line_to(pose, scale, _retry=False)
+        return False
 
 
 def grip(q):

@@ -103,6 +103,17 @@ class Orchestrator(dg.DockGrasp):
             self.goto(SHELF_DOCK)
         return skills.pick(self)[:2]
 
+    def redock_then_unload(self):
+        for _try in range(3):
+            x, y, _ = self.robot_pose()
+            d = math.hypot(x - STATION[0], y - STATION[1])
+            if d <= 0.12:
+                break
+            print('  robot is %.2f m from the station, navigating back (%d/3)' % (d, _try + 1))
+            self.goto(STATION)
+            time.sleep(1.0)
+        return skills.unload(self)[:2]
+
     def retry(self, name, fn, tries):
         for i in range(1, tries + 1):
             ok, why = fn()
@@ -131,6 +142,9 @@ class Orchestrator(dg.DockGrasp):
         self.set_state('NAVIGATING_TO_STATION')
         if not self.retry('deliver to station', lambda: self.goto_checked(STATION), MAX_DOCK):
             return self.set_state('FAILED')
+        self.set_state('UNLOADING')
+        if not self.retry('unload at station', lambda: self.redock_then_unload(), MAX_PLACE):
+            return self.set_state('FAILED')
         self.set_state('DONE')
 
 
@@ -145,6 +159,21 @@ def main():
             o.order_pending = False
             o.run_order()
     rclpy.shutdown()
+
+
+# --- SIM-ONLY RESEED: AMCL is re-seeded from Gazebo ground truth before every navigation goal.
+# A real robot has no ground truth; this works around AMCL drifting in the simulation.
+_orig_goto = Orchestrator.goto
+def _goto_with_reseed(self, *a, **k):
+    try:
+        import subprocess as _sp, sys as _sys, os as _os, time as _t
+        _sp.run([_sys.executable, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), 'reseed_amcl.py')],
+                stdout=_sp.DEVNULL, stderr=_sp.DEVNULL, timeout=20)
+        _t.sleep(1.5)
+    except Exception as e:
+        print('  reseed skipped:', e)
+    return _orig_goto(self, *a, **k)
+Orchestrator.goto = _goto_with_reseed
 
 
 if __name__ == '__main__':

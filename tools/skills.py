@@ -182,3 +182,100 @@ def place(n):
     if not n.line_to(p):
         return False, 'retreat from the tote blocked', {}
     return True, 'ok', {}
+
+
+# ---- station unload: take the cube out of the tote and put it on the station table ----
+STATION_DOCK = (-3.0, 0.0)
+RELEASE_W = (-3.72, 0.0)         # release point in the world: 0.72 m ahead of the station dock
+TABLE_W = (-3.8, 0.0)            # table centre in the world
+TABLE_TOP_W = 0.45
+WORLD_Z_TO_FRAME = -0.035        # shelf top 0.55 world = 0.515 in the robot frame
+TOTE_CUBE_Z = 0.380              # measured: resting cube centre in the tote
+GRASP_OFFSET = 0.134             # tool z minus cube centre z (0.680 - 0.546 at the shelf)
+
+
+def _line(n, x, y, z, orient):
+    p = Pose()
+    p.position.x, p.position.y, p.position.z = x, y, z
+    p.orientation = orient
+    return n.line_to(p)
+
+
+def unload(n):
+    """Take the cube out of the tote and put it on the station table. Returns (ok, reason, info)."""
+    rob = n.robot_pose()
+    d = math.hypot(rob[0] - STATION_DOCK[0], rob[1] - STATION_DOCK[1])
+    if d > 0.12:
+        return False, 'dock too far from the station pose: %.0f cm' % (100 * d), {}
+    table_top = TABLE_TOP_W + WORLD_Z_TO_FRAME
+    cx, cy = dg.to_robot(TABLE_W, rob)
+    rx, ry = dg.to_robot(RELEASE_W, rob)
+    n.set_box('pick_shelf', 0, 0, 0, (0, 0, 0), remove=True)
+    n.set_box('station_table', cx, cy, table_top - 0.225, (0.40, 0.80, 0.45))
+    try:
+        dg.grip(0.0)
+        if not go_ready(n):
+            return False, 'ready pose move failed', {}
+        j = n.ik(vp.pose_at(TOTE_X, TOTE_Y, CLEAR_Z, PLACE_YAW))
+        if j is None or not n.move(j):
+            return False, 'move above the tote failed', {}
+        grasp_z = TOTE_CUBE_Z + GRASP_OFFSET
+        for attempt in (1, 2):
+            cur = n.tf(dg.FRAME, dg.TIP)
+            if not _line(n, cur.translation.x, cur.translation.y, grasp_z, cur.rotation):
+                return False, 'descent into the tote failed', {}
+            cur = n.tf(dg.FRAME, dg.TIP)
+            high = cur.translation.z - grasp_z
+            print('UNLOAD: descent %d reached z=%.3f (target %.3f)' % (attempt, cur.translation.z, grasp_z))
+            if high <= 0.015:
+                break
+            if attempt == 2:
+                return False, 'descent in the tote stopped %.0f mm high' % (1000 * high), {}
+        dg.grip(0.2)
+        dg.grip(0.3)
+        short, l, r = knuckle_shortfall(n)
+        print('UNLOAD: knuckle shortfall %.3f rad (L %.3f R %.3f)' % (short, l, r))
+        if not (short > HELD_SHORTFALL and abs(l - r) < 0.05):
+            dg.grip(0.0)
+            cur = n.tf(dg.FRAME, dg.TIP)
+            _line(n, cur.translation.x, cur.translation.y, CLEAR_Z, cur.rotation)
+            return False, 'grasp in the tote missed', {}
+        cur = n.tf(dg.FRAME, dg.TIP)
+        if not _line(n, cur.translation.x, cur.translation.y, CLEAR_Z, cur.rotation):
+            return False, 'lift out of the tote failed', {}
+        j = n.ik(vp.pose_at(rx, ry, CLEAR_Z, PLACE_YAW))
+        if j is None or not n.move(j):
+            return False, 'move above the table failed', {}
+        cur = n.tf(dg.FRAME, dg.TIP)
+        release_z = table_top + 0.03 + GRASP_OFFSET + 0.015
+        if not _line(n, cur.translation.x, cur.translation.y, release_z, cur.rotation):
+            return False, 'descent to the table failed', {}
+        dg.grip(0.0)
+        time.sleep(2.0)  # let the fingers finish opening before the retreat
+        cur = n.tf(dg.FRAME, dg.TIP)
+        if not _line(n, cur.translation.x, cur.translation.y, CLEAR_Z, cur.rotation):
+            return False, 'retreat from the table blocked', {}
+        on, pos = False, None
+        for _ in range(8):
+            time.sleep(1.0)
+            on, pos = _cube_on_table()
+            if on:
+                break
+
+        print('UNLOAD: cube at world x=%.3f y=%.3f z=%.3f' % pos, '-> on the table' if on else '-> NOT on the table')
+        if not on:
+            return False, 'cube not on the table after release', {}
+        return True, 'ok', {}
+    finally:
+        n.set_box('station_table', 0, 0, 0, (0, 0, 0), remove=True)
+
+
+def _cube_on_table():
+    import re, subprocess
+    out = subprocess.run(['gz', 'topic', '-e', '-t', '/world/default/dynamic_pose/info', '-n', '1'],
+                         capture_output=True, text=True, timeout=30).stdout
+    i = out.find('name: "pick_item"')
+    c = out[i:i + 800]
+    g = lambda ax: float(re.search(r'position \{[^}]*?\b' + ax + r': ([-\d.eE+]+)', c, re.S).group(1))
+    x, y, z = g('x'), g('y'), g('z')
+    return (-4.0 < x < -3.6 and abs(y) < 0.4 and abs(z - 0.48) < 0.03), (x, y, z)
