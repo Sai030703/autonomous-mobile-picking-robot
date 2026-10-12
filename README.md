@@ -4,6 +4,10 @@ A simulated warehouse robot that takes an order, drives to a shelf, picks a cube
 
 **Demo video:** VIDEO_LINK
 
+<img width="777" height="952" alt="2026-10-05T12:13:38 996486439" src="https://github.com/user-attachments/assets/c5ce0be2-91f2-4261-afee-150cbf9051a6" />
+
+
+
 ## What it does
 
 An order (`red_cube`, quantity 1) goes through an orchestrator with these states:
