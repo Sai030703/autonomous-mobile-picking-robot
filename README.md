@@ -3,6 +3,13 @@
 A simulated warehouse robot that takes an order, drives to a shelf, picks a cube with a UR5e arm using a wrist camera, stows it in an onboard tote, drives to a packing station, and unloads it onto a table. **Simulation only.** Built with ROS 2 Lyrical and Gazebo Jetty.
 
 
+#Demo Video:
+
+
+
+
+
+
 <img width="475" height="512" alt="2026-10-05T12:13:38 996486439" src="https://github.com/user-attachments/assets/c5ce0be2-91f2-4261-afee-150cbf9051a6" />
 
 
