@@ -5,11 +5,14 @@ A simulated warehouse robot that takes an order, drives to a shelf, picks a cube
 
 **Demo Video:**
 
-Uploading WhatsApp Video 2026-10-12 at 11.53.39.mp4…
+
+https://github.com/user-attachments/assets/22f9fd75-9656-4fff-8621-9475d8133947
+
+
+https://github.com/user-attachments/assets/af9fe4f1-78b7-40f0-acb3-2c41545be9a0
 
 
 
-Uploading WhatsApp Video 2026-10-12 at 11.53.39.mp4…
 
 
 
